@@ -9,7 +9,9 @@ const formatDate = (date) => {
 export default function PostsTable({ posts, getPosts, user }) {
   const navigate = useNavigate();
 
-  const handleEdit = (id) => {};
+  const handleEdit = (id) => {
+    navigate(`/dashboard/editPost/${id}`);
+  };
 
   const handleDelete = async (id) => {
     const res = await fetch(`http://localhost:4000/articles/${id}`, {

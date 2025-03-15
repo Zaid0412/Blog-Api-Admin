@@ -43,11 +43,11 @@ body.light {
 
 /* Error Page  */
 .error-container {
+  margin-top: 5em;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
   background-color: var(--black);
   color: var(--white);
   padding: 24px;
@@ -68,7 +68,7 @@ body.light {
 
 .error-subtext {
   font-size: 1.125rem;
-  color: var(--red);
+  color: var(--pink);
   margin-top: 16px;
 }
 
@@ -85,6 +85,7 @@ nav.navbar {
 nav.navbar h1 {
   margin: 0;
   font-size: 2em;
+  cursor: pointer;
 }
 
 nav.navbar button {
@@ -136,10 +137,15 @@ nav.navbar .signup-btn:hover {
   gap: 0.5em;
 }
 
+.button svg {
+  stroke: var(--black);
+}
+
 .dropdown-content {
   display: none; /* Hidden by default */
   opacity: 0;
   font-size: 13px;
+  letter-spacing: 1px;
   position: absolute;
   z-index: 1;
   min-width: 100%;
@@ -152,15 +158,18 @@ nav.navbar .signup-btn:hover {
 
 .dropdown-content a {
   color: var(--white);
+  border-bottom: 1px solid var(--white);
   padding: 8px 10px;
   text-decoration: none;
   display: block;
   transition: all 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .dropdown-content a:hover {
-  background-color: var(--white);
-  color: var(--black); /* Replaced --lavender with --black */
+  /* background-color: var(--white); */
+  /* color: var(--black); */
+  filter: invert(25%);
 }
 
 .dropdown-content a:focus {
@@ -184,6 +193,34 @@ nav.navbar .signup-btn:hover {
     opacity: 1;
     filter: blur(0px);
   }
+}
+
+/* Footer  */
+footer {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--light-black);
+  padding: 0.75em 2em;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  margin-top: auto;
+  letter-spacing: 1px;
+}
+
+footer span {
+  font-weight: 600;
+}
+
+footer a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--blue);
+  transition: all 0.2s ease-in-out;
+}
+
+footer a:hover {
+  filter: grayscale(30%);
 }
 
 /* Login Form and Signup Form */
@@ -277,6 +314,8 @@ p.res-text {
 }
 
 /* DashBoard */
+
+/* All Posts Page  */
 .dashboard {
   box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
     rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
@@ -285,7 +324,7 @@ p.res-text {
   border-radius: 7px;
 }
 
-.head {
+.dashboard .head {
   width: 100%;
   padding: 2em;
   /* border: 1px solid var(--light-black); */
@@ -350,4 +389,158 @@ p.res-text {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  cursor: pointer;
+}
+
+/* Create Post Page  */
+.dashboard .new-post-page {
+  width: fit-content;
+  padding: 2em;
+  /* border: 1px solid var(--light-black); */
+  border-radius: 7px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard .new-post-page h1 {
+  margin-bottom: 2em;
+}
+
+.dashboard .new-post-page form {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  margin: 0;
+  gap: 1.5em;
+  padding: 0 1em;
+}
+
+.dashboard .new-post-page form input {
+  width: 75%;
+  border-radius: 5px;
+}
+
+/* From Uiverse.io by DaniloMGutavo */
+.dashboard .new-post-page .isPublished {
+  /* box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px; */
+  padding: 0.5em 1.5em;
+  padding-bottom: 0.1em;
+  border-radius: 7px;
+}
+
+.checkbox-container {
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+}
+
+.checkbox-container p {
+  margin: 0;
+  margin-top: 4px;
+}
+
+.custom-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: var(--light-black);
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--black);
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.custom-checkbox:checked ~ .checkmark {
+  background-color: var(--blue);
+  box-shadow: 0 3px 7px rgba(33, 150, 243, 0.3);
+}
+
+.custom-checkbox:checked ~ .checkmark:after {
+  display: block;
+}
+
+@keyframes checkAnim {
+  0% {
+    height: 0;
+  }
+
+  100% {
+    height: 10px;
+  }
+}
+
+.custom-checkbox:checked ~ .checkmark:after {
+  animation: checkAnim 0.2s forwards;
+}
+
+.dashboard .new-post-page button {
+  box-sizing: border-box;
+  background-color: var(--white);
+  color: var(--black);
+  border: 2px solid var(--white);
+  outline: none;
+  padding: 0.8em 2em;
+  margin-left: 1.5em;
+  font-weight: 500;
+  font-size: 1em;
+  letter-spacing: 1px;
+  border-radius: 5px;
+  transition: all 0.25s ease-in-out;
+  cursor: pointer;
+  will-change: transform;
+}
+
+.dashboard .new-post-page button:hover {
+  /* background-color: var(--black);
+  color: var(--white); */
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  transform: scale(1.025);
+}
+
+.article-back {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 1.25em;
+  cursor: pointer;
+  margin-bottom: 1em;
+}
+
+.article-back:hover,
+.article-back:hover svg {
+  color: var(--pink);
+  stroke: var(--pink);
 }

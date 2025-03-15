@@ -10,7 +10,7 @@ export default function LoginForm() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Updated user:", user); // ✅ Logs user after state update
+    // console.log("Updated user:", user); // ✅ Logs user after state update
   }, [user]); // ✅ Runs when `user` changes
 
   const handleLoginBtn = async (e) => {
@@ -45,10 +45,10 @@ export default function LoginForm() {
       }
 
       setSuccess("Login successful! Redirecting...");
-      console.log("Received user data:", data); // ✅ This will show correct data
+      // console.log("Received user data:", data); // ✅ This will show correct data
       setUser(data); // ✅ Updates state, but user will still be null here
 
-      setTimeout(() => navigate("/dashboard"), 1250);
+      setTimeout(() => navigate("/dashboard/posts"), 1250);
     } catch (err) {
       setErrors([{ path: "server", msg: err.message }]);
     }

@@ -1,10 +1,41 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Navbar({ user }) {
+export default function Navbar({ user, setUser }) {
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    if (!user || !user.refreshToken || !user.accessToken) {
+      console.error("No valid user session found!");
+      return;
+    }
+
+    try {
+      setTimeout(async () => {
+        const response = await fetch("http://localhost:4000/users/logout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.accessToken}`, // Send accessToken in headers
+          },
+          body: JSON.stringify({ token: user.refreshToken }), // Send refreshToken in body
+        });
+
+        if (response.ok) {
+          setUser(null);
+          navigate("/");
+        } else {
+          console.error("Logout failed!", await response.json());
+        }
+      }, 1000);
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
   return (
     <nav className="navbar">
-      <h1>Postly</h1>
-
+      <h1 onClick={() => navigate("/dashboard/posts")}>Postly</h1>
       {user ? (
         <div className="paste-button">
           <button className="button">
@@ -14,7 +45,7 @@ export default function Navbar({ user }) {
               height="24"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="white"
+              stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -27,22 +58,19 @@ export default function Navbar({ user }) {
             {user.user.username} &nbsp; ▼
           </button>
 
-          {/* Dropdown content */}
           <div className="dropdown-content">
-            <a id="top" href="/logout">
+            <Link to={"/dashboard/posts"} id="top">
+              Posts
+            </Link>
+            <Link to={"/dashboard/newPost"} id="top">
+              Create Post
+            </Link>
+            {/* <a id="top" onClick={logout}>
               Logout
-            </a>
-            {/* The rest of the links are commented out for now */}
-            {/* <a id="middle" href="/users">
-           All Users
-         </a>
-         <a id="bottom" href="/logout">
-           Logout
-         </a> */}
+            </a> */}
           </div>
         </div>
       ) : (
-        // ✅ Show login/signup buttons if no user is logged in
         <>
           <a href="/login">
             <button className="login-btn">Login</button>
