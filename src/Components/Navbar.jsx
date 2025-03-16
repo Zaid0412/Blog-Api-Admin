@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Navbar({ user, setUser }) {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(false);
 
   const logout = async () => {
     if (!user || !user.refreshToken || !user.accessToken) {
@@ -33,43 +34,62 @@ export default function Navbar({ user, setUser }) {
     }
   };
 
+  const handleTheme = () => {
+    setDarkMode(!darkMode);
+  };
+
+  useEffect(() => {
+    document.body.classList.toggle("light");
+  }, [darkMode]);
+
   return (
     <nav className="navbar">
       <h1 onClick={() => navigate("/dashboard/posts")}>Postly</h1>
+      <input
+        type="checkbox"
+        className="theme-checkbox"
+        onChange={handleTheme}
+        checked={darkMode}
+      ></input>
       {user ? (
-        <div className="paste-button">
-          <button className="button">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-circle-user-round"
-            >
-              <path d="M18 20a6 6 0 0 0-12 0" />
-              <circle cx="12" cy="10" r="4" />
-              <circle cx="12" cy="12" r="10" />
-            </svg>{" "}
-            {user.user.username} &nbsp; ▼
+        <>
+          <button onClick={logout} className="logout-btn">
+            Logout
           </button>
+          <div className="paste-button">
+            <button className="button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-circle-user-round"
+              >
+                <path d="M18 20a6 6 0 0 0-12 0" />
+                <circle cx="12" cy="10" r="4" />
+                <circle cx="12" cy="12" r="10" />
+              </svg>{" "}
+              {user.user.username} &nbsp; ▼
+            </button>
 
-          <div className="dropdown-content">
-            <Link to={"/dashboard/posts"} id="top">
-              Posts
-            </Link>
-            <Link to={"/dashboard/newPost"} id="top">
-              Create Post
-            </Link>
-            {/* <a id="top" onClick={logout}>
+            <div className="dropdown-content">
+              <Link to={"/dashboard/posts"} id="top">
+                Posts
+              </Link>
+              <Link to={"/dashboard/newPost"} id="top">
+                Create Post
+              </Link>
+              {/* <a id="top" onClick={logout}>
               Logout
             </a> */}
+            </div>
           </div>
-        </div>
+        </>
       ) : (
         <>
           <a href="/login">
