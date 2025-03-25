@@ -1,36 +1,45 @@
-import React, { useEffect, useRef } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import React, { useEffect, useRef } from "react";
 import PostsTable from "./PostsTable";
+import "ldrs/tailspin";
 
 function Posts() {
-  const { user, posts, setPosts, getPosts } = useOutletContext();
+  const { user, posts, setPosts, getPosts, loading, setLoading } =
+    useOutletContext();
   const searchRef = useRef(null);
   const navigate = useNavigate();
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    // search?searchWord=${e.target.value}
-    const res = await fetch(
-      `http://localhost:4000/articles/author/${user.user.id}/search?searchWord=${searchRef.current.value}`,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      },
-    );
+    setLoading(true); // Start loading
 
-    const data = await res.json();
-    setPosts(data.articles);
+    try {
+      const res = await fetch(
+        `http://localhost:4000/articles/author/${user.user.id}/search?searchWord=${searchRef.current.value}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+
+      const data = await res.json();
+      setPosts(data.articles);
+    } catch (error) {
+      console.error("Search failed:", error);
+    } finally {
+      setLoading(false); // Stop loading
+    }
   };
 
   useEffect(() => {
-    getPosts();
+    setLoading(true); // Start loading before fetching posts
+    getPosts().finally(() => setLoading(false)); // Stop loading after fetch
   }, []);
 
   return (
     <>
       <div className="head">
         <h1>Posts</h1>
-
         <form>
           <input
             type="text"
@@ -61,7 +70,11 @@ function Posts() {
           </button>
         </form>
       </div>
-      {posts.length > 0 ? (
+
+      {loading ? (
+        // Default values shown
+        <div class="loader"></div>
+      ) : posts.length > 0 ? (
         <PostsTable posts={posts} getPosts={getPosts} user={user} />
       ) : (
         <div
