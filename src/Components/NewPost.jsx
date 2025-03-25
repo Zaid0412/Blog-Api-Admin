@@ -8,40 +8,56 @@ export default function NewPost() {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [isPublished, setIsPublised] = useState(false);
+  const [isPublished, setIsPublished] = useState(false);
+  const [errors, setErrors] = useState([]);
+  const [success, setSuccess] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(title);
-    console.log(content);
-    console.log(isPublished);
+    setErrors([]);
+    setSuccess(null);
 
-    const res = await fetch(`http://localhost:4000/articles/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // ✅ Add this for JSON data
-        authorization: `Bearer ${user?.accessToken}`,
-      },
-      body: JSON.stringify({
-        title,
-        content,
-        isPublished,
-        userId: user.user.id,
-      }),
-    });
-
-    if (!res.ok) {
-      throw new Error(`HTTP error! Status: ${res.status}`);
+    if (!title || !content) {
+      setErrors([{ path: "form", msg: "Title and content are required!" }]);
+      return;
     }
 
-    const data = await res.json();
-    console.log("Success:", data);
-    navigate("/dashboard/posts");
+    try {
+      const res = await fetch(`http://localhost:4000/articles/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${user?.accessToken}`,
+        },
+        body: JSON.stringify({
+          title,
+          content,
+          isPublished,
+          userId: user.user.id,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        if (data.errors) {
+          setErrors(data.errors.errors);
+        } else {
+          throw new Error(data.message || "Failed to create post!");
+        }
+        return;
+      }
+
+      setSuccess("Post created successfully! Redirecting...");
+      setTimeout(() => navigate("/dashboard/posts"), 1250);
+    } catch (err) {
+      setErrors([{ path: "server", msg: err.message }]);
+    }
   };
 
   const handleGoBack = () => {
     navigate("/dashboard/posts");
   };
+
   return (
     <div className="new-post-page">
       <div className="article-back" onClick={handleGoBack}>
@@ -64,6 +80,13 @@ export default function NewPost() {
       </div>
       <h1>Create Post</h1>
       <form>
+        {errors.map((error, index) => (
+          <p key={index} className="error-msg" style={{ color: "red" }}>
+            {error.msg}
+          </p>
+        ))}
+        {success && <p style={{ color: "green" }}>{success}</p>}
+
         <input
           type="text"
           name="title"
@@ -77,107 +100,21 @@ export default function NewPost() {
           onEditorChange={(newContent) => setContent(newContent)}
           apiKey="565m0vff87wh2wl6ne2ggojqntd1c9f9uxxsae08blrk0gfd"
           init={{
-            skin: "oxide-dark", // UI dark mode
-            content_css: "dark", // Editor content dark mode
-            width: "100%", // Ensure proper width
-            height: 500, // Adjust height
-            menubar: true, // Enable menu
-            toolbar_sticky: true, // Keep toolbar fixed
-            resize: true, // Allow resizing
-            branding: false, // Remove TinyMCE branding
-            // width: 800,
-            menu: {
-              file: {
-                title: "File",
-                items:
-                  "newdocument restoredraft | preview | importword exportpdf exportword | print | deleteallconversations",
-              },
-              edit: {
-                title: "Edit",
-                items:
-                  "undo redo | cut copy paste pastetext | selectall | searchreplace",
-              },
-              view: {
-                title: "View",
-                items:
-                  "code revisionhistory | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments",
-              },
-              insert: {
-                title: "Insert",
-                items:
-                  "image link media addcomment pageembed codesample inserttable | math | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime",
-              },
-              format: {
-                title: "Format",
-                items:
-                  "bold italic underline strikethrough superscript subscript codeformat | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | language | removeformat",
-              },
-              tools: {
-                title: "Tools",
-                items:
-                  "spellchecker spellcheckerlanguage | a11ycheck code wordcount",
-              },
-              table: {
-                title: "Table",
-                items:
-                  "inserttable | cell row column | advtablesort | tableprops deletetable",
-              },
-              help: { title: "Help", items: "help" },
-            },
+            skin: "oxide-dark",
+            content_css: "dark",
+            width: "100%",
+            height: 500,
+            menubar: true,
+            toolbar_sticky: true,
+            resize: true,
+            branding: false,
             plugins: [
-              "anchor",
-              "autolink",
-              "charmap",
-              "codesample",
-              "emoticons",
-              "image",
-              "link",
-              "lists",
-              "media",
-              "searchreplace",
-              "table",
-              "visualblocks",
-              "wordcount",
-              "checklist",
-              "mediaembed",
-              "casechange",
-              "export",
-              "formatpainter",
-              "pageembed",
-              "a11ychecker",
-              "tinymcespellchecker",
-              "permanentpen",
-              "powerpaste",
-              "advtable",
-              "advcode",
-              "editimage",
-              "advtemplate",
-              "ai",
-              "mentions",
-              "tinycomments",
-              "tableofcontents",
-              "footnotes",
-              "mergetags",
-              "autocorrect",
-              "typography",
-              "inlinecss",
-              "markdown",
-              "importword",
-              "exportword",
-              "exportpdf",
+              "link image media table mergetags",
+              "lists checklist numlist bullist",
+              "visualblocks wordcount preview fullscreen",
             ],
             toolbar:
-              "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
-            tinycomments_mode: "embedded",
-            tinycomments_author: "Author name",
-            mergetags_list: [
-              { value: "First.Name", title: "First Name" },
-              { value: "Email", title: "Email" },
-            ],
-            ai_request: (request, respondWith) =>
-              respondWith.string(() =>
-                Promise.reject("See docs to implement AI Assistant"),
-              ),
+              "undo redo | formatselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat",
           }}
           initialValue="Content"
         />
@@ -189,14 +126,14 @@ export default function NewPost() {
               className="custom-checkbox"
               type="checkbox"
               defaultChecked={isPublished}
-              onChange={(e) => {
-                setIsPublised(e.target.checked);
-              }}
+              onChange={(e) => setIsPublished(e.target.checked)}
             />
             <span className="checkmark"></span>
           </label>
         </div>
-        <button onClick={handleSubmit}>Create Post</button>
+        <button onClick={handleSubmit} disabled={!title || !content}>
+          Create Post
+        </button>
       </form>
     </div>
   );
