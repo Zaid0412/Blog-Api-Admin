@@ -14,6 +14,7 @@ export default function PostsTable({ posts, getPosts, user }) {
   };
 
   const handleDelete = async (id) => {
+    console.log(user);
     const res = await fetch(`http://localhost:4000/articles/${id}`, {
       method: "DELETE",
       headers: { authorization: `Bearer ${user.accessToken}` },
@@ -64,7 +65,11 @@ export default function PostsTable({ posts, getPosts, user }) {
               </button>
             </th>
             <th className="btn">
-              <button onClick={(e) => handleDelete(post.id)}>
+              <button
+                onClick={(e) => {
+                  if (post.user.id == user.user.id) handleDelete(post.id);
+                }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"

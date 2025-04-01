@@ -9,10 +9,6 @@ export default function LoginForm() {
   const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // console.log("Updated user:", user); // ✅ Logs user after state update
-  }, [user]); // ✅ Runs when `user` changes
-
   const handleLoginBtn = async (e) => {
     e.preventDefault();
     setErrors([]);
@@ -46,6 +42,8 @@ export default function LoginForm() {
 
       setSuccess("Login successful! Redirecting...");
       // console.log("Received user data:", data); // ✅ This will show correct data
+      localStorage.setItem("user", JSON.stringify(data));
+      console.log("User set in localStorage");
       setUser(data); // ✅ Updates state, but user will still be null here
 
       setTimeout(() => navigate("/dashboard/posts"), 1250);

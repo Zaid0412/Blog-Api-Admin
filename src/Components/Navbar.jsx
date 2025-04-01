@@ -11,6 +11,10 @@ export default function Navbar({ user, setUser }) {
       return;
     }
 
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/");
+
     try {
       setTimeout(async () => {
         const response = await fetch("http://localhost:4000/users/logout", {
@@ -23,6 +27,7 @@ export default function Navbar({ user, setUser }) {
         });
 
         if (response.ok) {
+          localStorage.removeItem("user");
           setUser(null);
           navigate("/");
         } else {

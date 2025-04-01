@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useOutletContext, useNavigate, Outlet } from "react-router-dom";
 
 export default function Dashboard() {
-  const { user } = useOutletContext();
+  const { user, setUser } = useOutletContext();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true); // ✅ Added loading state
   const navigate = useNavigate();

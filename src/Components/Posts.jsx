@@ -73,7 +73,7 @@ function Posts() {
 
       {loading ? (
         // Default values shown
-        <div class="loader"></div>
+        <div className="loader"></div>
       ) : posts.length > 0 ? (
         <PostsTable posts={posts} getPosts={getPosts} user={user} />
       ) : (
