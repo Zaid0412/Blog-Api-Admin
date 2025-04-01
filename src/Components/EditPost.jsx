@@ -50,19 +50,21 @@ export default function EditPost() {
     }
 
     try {
-      const res = await fetch(`http://localhost:4000/articles/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${user?.accessToken}`,
-        },
-        body: JSON.stringify({
-          title,
-          content,
-          isPublished,
-          userId: user.user.id,
-        }),
-      });
+      if (user.user.id == article.user.id) {
+        const res = await fetch(`http://localhost:4000/articles/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${user?.accessToken}`,
+          },
+          body: JSON.stringify({
+            title,
+            content,
+            isPublished,
+            userId: user.user.id,
+          }),
+        });
+      }
 
       if (!res.ok) throw new Error(`Failed to update: ${res.status}`);
       navigate("/dashboard/posts");
