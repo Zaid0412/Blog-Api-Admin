@@ -1,3 +1,12 @@
+# Blog-Api-Admin
+Code-Blog-Admin is a tool designed to manage the content of your blog. With a user-friendly interface, you can easily create, edit, and delete articles, manage tags, and moderate comments, of your blog. The tool is built with React and TypeScript and is powered by a self-coded RESTful blog API written in Express.
+
+# API
+The CMS fetches data from a self-coded RESTful blog API. The source code for the API can be found at https://github.com/Zaid0412/Blog-Api-Backend.
+
+# Client
+The source code for the blog-client frontend can be found at https://github.com/Zaid0412/Blog-Api-Frontend.
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
